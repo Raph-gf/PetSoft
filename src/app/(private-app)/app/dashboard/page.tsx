@@ -4,7 +4,7 @@ import PetDetails from "@/components/pet-details";
 import PetList from "@/components/pet-list";
 import SearchForm from "@/components/search-form";
 import Stats from "@/components/stats";
-import { TPetList } from "@/lib/types";
+import { TPet } from "@/lib/types";
 
 export default async function DashboardPage() {
   const res = await fetch(
@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   if (!res.ok) {
     alert(`HTTP error! status: ${res.status}`);
   }
-  const data: TPetList[] = await res.json();
+  const data: TPet[] = await res.json();
   console.log(data);
 
   return (

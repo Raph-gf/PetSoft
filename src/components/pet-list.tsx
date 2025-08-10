@@ -1,8 +1,8 @@
-import { TPetList } from "@/lib/types";
+import { TPet } from "@/lib/types";
 import Image from "next/image";
 
 type PetListProps = {
-  pets: TPetList[];
+  pets: TPet[];
 };
 
 export default async function PetList({ pets }: PetListProps) {

@@ -1,4 +1,4 @@
-export type TPetList = {
+export type TPet = {
   id: number;
   age: number;
   imageUrl: string;
