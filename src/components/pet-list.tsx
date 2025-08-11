@@ -3,6 +3,7 @@
 import { usePetContext } from "@/context/pet-context-provider";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import logo from "../../public/logo.svg";
 
 export default function PetList() {
   const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
@@ -20,7 +21,7 @@ export default function PetList() {
             )}
           >
             <Image
-              src={pet.imageUrl}
+              src={pet.imageUrl ?? logo}
               alt="Pet image"
               width={45}
               height={45}
