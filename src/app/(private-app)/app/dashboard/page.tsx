@@ -13,7 +13,7 @@ export default function DashboardPage() {
         <Stats />
       </div>
 
-      <div className="grid md:grid-cols-3 grid-rows-[45px_1fr] gap-4 h-[600px]">
+      <div className="grid md:grid-cols-3 grid-rows-[45px_1fr] gap-4 md:h-[600px]">
         <div className="md:row-start-1 md:row-span-1 md:col-start-1 md:col-span-1">
           <SearchForm />
         </div>

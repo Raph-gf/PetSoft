@@ -1,0 +1,8 @@
+export type TPet = {
+  id: number;
+  age: number;
+  imageUrl: string;
+  notes: string;
+  name: string;
+  ownerName: string;
+};
