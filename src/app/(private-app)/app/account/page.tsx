@@ -4,9 +4,9 @@ import H1 from "@/components/h1";
 export default function AccountPage() {
   return (
     <main>
-      <H1 className="font-medium text-2xl leading-6">Your Account</H1>
+      <H1 className="font-medium text-2xl leading-6 my-8">Your Account</H1>
 
-      <ContentBlock>
+      <ContentBlock className="h-[500px]">
         <p>Logged in as ...</p>
       </ContentBlock>
     </main>
