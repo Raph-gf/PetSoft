@@ -8,6 +8,7 @@ type PetContextType = {
   setPets?: React.Dispatch<React.SetStateAction<TPet[]>>;
   selectedPetId: number | null;
   setSelectedPetId?: React.Dispatch<React.SetStateAction<number | null>>;
+  handleChangeSelectedPetId: (id: number) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -22,6 +23,12 @@ export default function PetContextProvider({
   const [pets, setPets] = useState(data);
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
 
+  console.log(selectedPetId);
+
+  const handleChangeSelectedPetId = (id: number) => {
+    setSelectedPetId(id);
+  };
+
   return (
     <PetContext.Provider
       value={{
@@ -29,6 +36,7 @@ export default function PetContextProvider({
         setPets,
         selectedPetId,
         setSelectedPetId,
+        handleChangeSelectedPetId,
       }}
     >
       {children}
