@@ -1,11 +1,10 @@
-import { TPet } from "@/lib/types";
+"use client";
+
+import { usePetContext } from "@/context/pet-context-provider";
 import Image from "next/image";
 
-type PetListProps = {
-  pets: TPet[];
-};
-
-export default async function PetList({ pets }: PetListProps) {
+export default function PetList() {
+  const { pets } = usePetContext();
   return (
     <ul className="bg-white border-b border-black/[0.08]">
       {pets.map(pet => (
