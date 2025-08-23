@@ -19,11 +19,11 @@ export default function PetList() {
       {filteredPets.map(pet => (
         <li key={pet.id}>
           <button
-            onClick={() => handleChangeSelectedPetId(pet.id)}
+            onClick={() => handleChangeSelectedPetId(Number(pet.id))}
             className={cn(
               "flex items-center px-5 text-base h-[70px] w-full cursor-pointer gap-3 hover:bg-[#EFF1F32] focus:bg-[#EFF1F2] transition",
               {
-                " bg-[#EFF1F2]": selectedPetId === pet.id,
+                " bg-[#EFF1F2]": selectedPetId === Number(pet.id),
               }
             )}
           >

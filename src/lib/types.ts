@@ -1,5 +1,5 @@
 export type TPet = {
-  id: number;
+  id: string;
   age: number;
   imageUrl: string;
   notes: string;
