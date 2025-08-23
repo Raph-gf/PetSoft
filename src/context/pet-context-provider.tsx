@@ -25,9 +25,7 @@ export default function PetContextProvider({
 }) {
   // states
   const [pets, setPets] = useState(data);
-  console.log(pets);
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
-  console.log(selectedPetId);
 
   // derived states
   const selectedPet = pets.find(pet => Number(pet.id) === selectedPetId);
