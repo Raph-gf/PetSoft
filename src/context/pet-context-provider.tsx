@@ -6,11 +6,11 @@ import { createContext, useContext, useState } from "react";
 type PetContextType = {
   pets: TPet[];
   setPets?: React.Dispatch<React.SetStateAction<TPet[]>>;
-  selectedPetId: number | null;
-  setSelectedPetId?: React.Dispatch<React.SetStateAction<number | null>>;
+  selectedPetId: string | null;
+  setSelectedPetId?: React.Dispatch<React.SetStateAction<string | null>>;
   selectedPet: TPet | undefined;
   numberOfPets: number;
-  handleChangeSelectedPetId: (id: number) => void;
+  handleChangeSelectedPetId: (id: string) => void;
   handleCheckoutPet: (id: string) => void;
   handleAddPet: (newPet: Omit<TPet, "id">) => void;
   handleEditPet: (petId: string, newPetData: Omit<TPet, "id">) => void;
@@ -27,14 +27,14 @@ export default function PetContextProvider({
 }) {
   // states
   const [pets, setPets] = useState(data);
-  const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
   // derived states
-  const selectedPet = pets.find(pet => Number(pet.id) === selectedPetId);
+  const selectedPet = pets.find(pet => pet.id === selectedPetId);
   const numberOfPets = pets.length;
 
   // event handlers
-  const handleChangeSelectedPetId = (id: number) => {
+  const handleChangeSelectedPetId = (id: string) => {
     setSelectedPetId(id);
   };
 
