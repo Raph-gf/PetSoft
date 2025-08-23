@@ -39,14 +39,13 @@ export default function PetButton({
           <Button variant="secondary">{children}</Button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>
             {actionType === "add" ? "Add a new pet" : "Edit pet"}
           </DialogTitle>
         </DialogHeader>
-        form here...
-        <PetForm />
+        <PetForm actionType={actionType} />
       </DialogContent>
     </Dialog>
   );
