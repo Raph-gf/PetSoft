@@ -13,12 +13,13 @@ type TActionType = {
 };
 
 export default function PetForm({ actionType, onFormSubmission }: TActionType) {
-  const { handleAddPet, selectedPet } = usePetContext();
+  const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const newPet = {
+
+    const pet = {
       name: formData.get("name") as string,
       ownerName: formData.get("ownerName") as string,
       imageUrl:
@@ -28,11 +29,14 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
       notes: formData.get("notes") as string,
     };
 
-    console.log(newPet);
-
-    handleAddPet(newPet);
+    if (actionType === "add") {
+      handleAddPet(pet);
+    } else if (actionType === "edit") {
+      handleEditPet(selectedPet?.id as string, pet);
+    }
     onFormSubmission();
   };
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col">
       <div className="space-y-3 mt-3 ">
@@ -43,7 +47,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
             name="name"
             type="text"
             required
-            defaultValue={actionType ? selectedPet?.name : ""}
+            defaultValue={actionType === "edit" ? selectedPet?.name : ""}
           />
         </div>
 
@@ -54,7 +58,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
             name="ownerName"
             type="text"
             required
-            defaultValue={actionType ? selectedPet?.ownerName : ""}
+            defaultValue={actionType === "edit" ? selectedPet?.ownerName : ""}
           />
         </div>
 
@@ -64,7 +68,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
             id="imageUrl"
             name="imageUrl"
             type="text"
-            defaultValue={actionType ? selectedPet?.imageUrl : ""}
+            defaultValue={actionType === "edit" ? selectedPet?.imageUrl : ""}
           />
         </div>
 
@@ -75,7 +79,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
             name="age"
             type="number"
             required
-            defaultValue={actionType ? selectedPet?.age : ""}
+            defaultValue={actionType === "edit" ? selectedPet?.age : ""}
           />
         </div>
 
@@ -86,7 +90,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
             name="notes"
             rows={3}
             required
-            defaultValue={actionType ? selectedPet?.notes : ""}
+            defaultValue={actionType === "edit" ? selectedPet?.notes : ""}
           />
         </div>
       </div>
