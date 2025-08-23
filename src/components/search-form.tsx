@@ -4,7 +4,7 @@ import { useSearchContext } from "@/context/search-context-provider";
 
 export default function SearchForm() {
   const { searchQuery, handleSearchQuery } = useSearchContext();
-  console.log(searchQuery);
+
   return (
     <form className="w-full h-full">
       <input
