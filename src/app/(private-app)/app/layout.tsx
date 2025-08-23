@@ -21,9 +21,11 @@ export default async function PrivateAppLayout({
       <BackgroundPattern />
       <div className=" flex flex-col max-w-[1050px] mx-auto px-4 min-h-screen">
         <AppHeader />
+
         <SearchContextProvider>
           <PetContextProvider data={data}>{children}</PetContextProvider>
         </SearchContextProvider>
+
         <AppFooter />
       </div>
     </>
