@@ -4,6 +4,7 @@ import { usePetContext } from "@/context/pet-context-provider";
 import Image from "next/image";
 import logo from "../../public/logo.svg";
 import { TPet } from "@/lib/types";
+import PetButton from "./pet-buttons";
 
 type TPetProps = {
   pet: TPet | undefined;
@@ -40,6 +41,10 @@ function TopBar({ pet }: TPetProps) {
       />
 
       <h2 className="text-3xl font-semibold leading-7 ml-5">{pet?.name}</h2>
+      <div className="ml-auto">
+        <PetButton actionType="edit">Edit</PetButton>
+        <PetButton actionType="checkout">Checkout</PetButton>
+      </div>
     </div>
   );
 }

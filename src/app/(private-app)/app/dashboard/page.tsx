@@ -1,9 +1,11 @@
 import Branding from "@/components/branding";
 import ContentBlock from "@/components/content-block";
+import PetButton from "@/components/pet-buttons";
 import PetDetails from "@/components/pet-details";
 import PetList from "@/components/pet-list";
 import SearchForm from "@/components/search-form";
 import Stats from "@/components/stats";
+import { Plus } from "lucide-react";
 
 export default function DashboardPage() {
   return (
@@ -21,6 +23,9 @@ export default function DashboardPage() {
         <div className="md:row-start-2 md:row-span-full md:col-start-1 md:col-span-1">
           <ContentBlock>
             <PetList />
+            <PetButton actionType="add">
+              <Plus className="size-6" />
+            </PetButton>
           </ContentBlock>
         </div>
 
