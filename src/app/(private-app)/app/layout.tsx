@@ -3,6 +3,7 @@ import AppHeader from "@/components/app-header";
 import BackgroundPattern from "@/components/background-pattern";
 import PetContextProvider from "@/context/pet-context-provider";
 import SearchContextProvider from "@/context/search-context-provider";
+import prisma from "@/lib/db";
 import { TPet } from "@/lib/types";
 
 export default async function PrivateAppLayout({
@@ -10,11 +11,7 @@ export default async function PrivateAppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const res = await fetch(
-    "https://bytegrad.com/course-assets/projects/projects/petsoft/api/pets"
-  );
-  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-  const data: TPet[] = await res.json();
+  const data = await prisma.pet.findMany();
 
   return (
     <>
