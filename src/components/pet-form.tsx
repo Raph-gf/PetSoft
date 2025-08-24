@@ -7,6 +7,8 @@ import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/context/pet-context-provider";
 import { addPet } from "@/actions/actions";
 import PetFormBtn from "./pet-form-btn";
+import { toast } from "sonner";
+import { useFormState } from "react-dom";
 
 type TActionType = {
   actionType: "add" | "edit";
@@ -15,6 +17,7 @@ type TActionType = {
 
 export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
+  // const [error,formAction] = useFormState(addPet,{})
   // adding a new pet or editing a pet on the client side via the handleSubmit function
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -42,7 +45,11 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   return (
     <form
       action={async formData => {
-        await addPet(formData);
+        const error = await addPet(formData);
+        if (error) {
+          toast.warning(error.message);
+          return;
+        }
         onFormSubmission();
       }}
       className="flex flex-col"

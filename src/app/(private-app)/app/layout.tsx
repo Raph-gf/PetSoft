@@ -5,6 +5,7 @@ import PetContextProvider from "@/context/pet-context-provider";
 import SearchContextProvider from "@/context/search-context-provider";
 import prisma from "@/lib/db";
 import { TPet } from "@/lib/types";
+import { Toaster } from "sonner";
 
 export default async function PrivateAppLayout({
   children,
@@ -25,6 +26,8 @@ export default async function PrivateAppLayout({
 
         <AppFooter />
       </div>
+
+      <Toaster position="top-right" />
     </>
   );
 }
