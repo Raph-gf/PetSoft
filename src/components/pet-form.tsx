@@ -4,12 +4,12 @@ import React from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
 import { usePetContext } from "@/context/pet-context-provider";
 import { addPet } from "@/actions/actions";
+import PetFormBtn from "./pet-form-btn";
 
 type TActionType = {
-  actionType: string;
+  actionType: "add" | "edit";
   onFormSubmission: () => void;
 };
 
@@ -62,7 +62,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
         <div className="space-y-2">
           <Label htmlFor="ownerName">Onwer Name</Label>
           <Input
-            id="owneName"
+            id="ownerName"
             name="ownerName"
             type="text"
             required
@@ -102,10 +102,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
           />
         </div>
       </div>
-
-      <Button type="submit" className="mt-5 self-end">
-        {actionType === "add" ? "Add a new pet" : "Edit"}
-      </Button>
+      <PetFormBtn actionType={actionType} />
     </form>
   );
 }
