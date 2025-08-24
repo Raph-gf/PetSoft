@@ -1,5 +1,6 @@
 "use client";
 
+import { addPet } from "@/actions/actions";
 import { TPet } from "@/lib/types";
 import { createContext, useContext, useState } from "react";
 
@@ -20,13 +21,12 @@ export const PetContext = createContext<PetContextType | null>(null);
 
 export default function PetContextProvider({
   children,
-  data,
+  data: pets,
 }: {
   children: React.ReactNode;
   data: TPet[];
 }) {
   // states
-  const [pets, setPets] = useState(data);
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
   // derived states
@@ -43,8 +43,12 @@ export default function PetContextProvider({
     setSelectedPetId(null);
   };
 
-  const handleAddPet = (newPet: Omit<TPet, "id">) => {
-    setPets(prev => [...prev, { ...newPet, id: String(Date.now()) }]);
+  const handleAddPet = async (newPet: Omit<TPet, "id">) => {
+    // adding pet on the client
+    // setPets(prev => [...prev, { ...newPet, id: String(Date.now()) }]);
+
+    // adding pet on the database with prisma and server actions
+    await addPet(newPet);
   };
 
   const handleEditPet = (petId: string, newPetData: Omit<TPet, "id">) => {
@@ -65,7 +69,6 @@ export default function PetContextProvider({
     <PetContext.Provider
       value={{
         pets,
-        setPets,
         selectedPetId,
         setSelectedPetId,
         handleChangeSelectedPetId,
