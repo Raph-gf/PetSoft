@@ -50,7 +50,6 @@ export async function editPet(petId: string | undefined, formData: FormData) {
 }
 
 export async function deletePet(petId: string) {
-  await sleep(2000);
   try {
     await prisma.pet.delete({
       where: {

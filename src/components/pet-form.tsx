@@ -102,6 +102,8 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
             id="age"
             name="age"
             type="number"
+            min="0"
+            inputMode="numeric"
             required
             defaultValue={actionType === "edit" ? selectedPet?.age : ""}
           />

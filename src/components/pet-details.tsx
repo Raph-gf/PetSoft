@@ -7,6 +7,7 @@ import { TPet } from "@/lib/types";
 import PetButton from "./pet-buttons";
 import { deletePet } from "@/actions/actions";
 import { toast } from "sonner";
+import { useTransition } from "react";
 
 type TPetProps = {
   pet: TPet;
@@ -31,6 +32,7 @@ export default function PetDetails() {
 }
 
 function TopBar({ pet }: TPetProps) {
+  const [isPending, startTransition] = useTransition();
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
@@ -47,7 +49,9 @@ function TopBar({ pet }: TPetProps) {
         <PetButton actionType="edit">Edit</PetButton>
         <PetButton
           actionType="checkout"
+          disabled={isPending}
           onClick={async () => {
+            startTransition(async () => {});
             const error = await deletePet(pet.id);
             if (error) {
               toast.error(error.message);
