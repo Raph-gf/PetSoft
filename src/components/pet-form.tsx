@@ -5,10 +5,9 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/context/pet-context-provider";
-import { addPet } from "@/actions/actions";
+import { addPet, editPet } from "@/actions/actions";
 import PetFormBtn from "./pet-form-btn";
 import { toast } from "sonner";
-import { useFormState } from "react-dom";
 
 type TActionType = {
   actionType: "add" | "edit";
@@ -16,7 +15,7 @@ type TActionType = {
 };
 
 export default function PetForm({ actionType, onFormSubmission }: TActionType) {
-  const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
+  const { selectedPet } = usePetContext();
   // const [error,formAction] = useFormState(addPet,{})
   // adding a new pet or editing a pet on the client side via the handleSubmit function
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -45,10 +44,20 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   return (
     <form
       action={async formData => {
-        const error = await addPet(formData);
-        if (error) {
-          toast.warning(error.message);
-          return;
+        if (actionType === "add") {
+          const error = await addPet(formData);
+          if (error) {
+            toast.warning(error.message);
+            return;
+          }
+          toast.success("Pet added succesfully");
+        } else if (actionType === "edit") {
+          const error = await editPet(selectedPet?.id, formData);
+          if (error) {
+            toast.warning(error.message);
+            return;
+          }
+          toast.success("Pet edited succesfully");
         }
         onFormSubmission();
       }}

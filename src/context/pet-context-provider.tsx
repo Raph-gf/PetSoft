@@ -12,9 +12,9 @@ type PetContextType = {
   selectedPet: TPet | undefined;
   numberOfPets: number;
   handleChangeSelectedPetId: (id: string) => void;
-  handleCheckoutPet: (id: string) => void;
-  handleAddPet: (newPet: Omit<TPet, "id">) => void;
-  handleEditPet: (petId: string, newPetData: Omit<TPet, "id">) => void;
+  // handleCheckoutPet: (id: string) => void;
+  // handleAddPet: (newPet: Omit<TPet, "id">) => void;
+  // handleEditPet: (petId: string, newPetData: Omit<TPet, "id">) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -38,32 +38,32 @@ export default function PetContextProvider({
     setSelectedPetId(id);
   };
 
-  const handleCheckoutPet = (id: string) => {
-    setPets(prev => prev.filter(pet => pet.id !== id));
-    setSelectedPetId(null);
-  };
+  // const handleCheckoutPet = (id: string) => {
+  //   setPets(prev => prev.filter(pet => pet.id !== id));
+  //   setSelectedPetId(null);
+  // };
 
-  const handleAddPet = async (newPet: Omit<TPet, "id">) => {
-    // adding pet on the client
-    // setPets(prev => [...prev, { ...newPet, id: String(Date.now()) }]);
+  // const handleAddPet = async (newPet: Omit<TPet, "id">) => {
+  //   // adding pet on the client
+  //   // setPets(prev => [...prev, { ...newPet, id: String(Date.now()) }]);
 
-    // adding pet on the database with prisma and server actions
-    await addPet(newPet);
-  };
+  //   // adding pet on the database with prisma and server actions
+  //   await addPet(newPet);
+  // };
 
-  const handleEditPet = (petId: string, newPetData: Omit<TPet, "id">) => {
-    setPets(prev =>
-      prev.map(pet => {
-        if (pet.id === petId) {
-          return {
-            id: petId,
-            ...newPetData,
-          };
-        }
-        return pet;
-      })
-    );
-  };
+  // const handleEditPet = (petId: string, newPetData: Omit<TPet, "id">) => {
+  //   setPets(prev =>
+  //     prev.map(pet => {
+  //       if (pet.id === petId) {
+  //         return {
+  //           id: petId,
+  //           ...newPetData,
+  //         };
+  //       }
+  //       return pet;
+  //     })
+  //   );
+  // };
 
   return (
     <PetContext.Provider
@@ -74,9 +74,6 @@ export default function PetContextProvider({
         handleChangeSelectedPetId,
         selectedPet,
         numberOfPets,
-        handleCheckoutPet,
-        handleAddPet,
-        handleEditPet,
       }}
     >
       {children}
