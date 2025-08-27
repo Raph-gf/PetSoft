@@ -14,6 +14,7 @@ import { useState } from "react";
 
 type PetButtonProps = {
   actionType: "add" | "edit" | "checkout";
+  disabled?: boolean;
   children?: React.ReactNode;
   onClick?: () => void;
 };
@@ -21,13 +22,14 @@ type PetButtonProps = {
 export default function PetButton({
   actionType,
   children,
+  disabled,
   onClick,
 }: PetButtonProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   if (actionType === "checkout") {
     return (
-      <Button variant="secondary" onClick={onClick}>
+      <Button variant="secondary" onClick={onClick} disabled={disabled}>
         {children}
       </Button>
     );
