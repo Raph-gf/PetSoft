@@ -1,79 +1,79 @@
 "use client";
 
+import { addPet } from "@/actions/actions";
 import { TPet } from "@/lib/types";
 import { createContext, useContext, useState } from "react";
 
 type PetContextType = {
   pets: TPet[];
   setPets?: React.Dispatch<React.SetStateAction<TPet[]>>;
-  selectedPetId: number | null;
-  setSelectedPetId?: React.Dispatch<React.SetStateAction<number | null>>;
+  selectedPetId: string | null;
+  setSelectedPetId?: React.Dispatch<React.SetStateAction<string | null>>;
   selectedPet: TPet | undefined;
   numberOfPets: number;
-  handleChangeSelectedPetId: (id: number) => void;
-  handleCheckoutPet: (id: string) => void;
-  handleAddPet: (newPet: Omit<TPet, "id">) => void;
-  handleEditPet: (petId: string, newPetData: Omit<TPet, "id">) => void;
+  handleChangeSelectedPetId: (id: string) => void;
+  // handleCheckoutPet: (id: string) => void;
+  // handleAddPet: (newPet: Omit<TPet, "id">) => void;
+  // handleEditPet: (petId: string, newPetData: Omit<TPet, "id">) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
 
 export default function PetContextProvider({
   children,
-  data,
+  data: pets,
 }: {
   children: React.ReactNode;
   data: TPet[];
 }) {
   // states
-  const [pets, setPets] = useState(data);
-  const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
   // derived states
-  const selectedPet = pets.find(pet => Number(pet.id) === selectedPetId);
+  const selectedPet = pets.find(pet => pet.id === selectedPetId);
   const numberOfPets = pets.length;
 
   // event handlers
-  const handleChangeSelectedPetId = (id: number) => {
+  const handleChangeSelectedPetId = (id: string) => {
     setSelectedPetId(id);
   };
 
-  const handleCheckoutPet = (id: string) => {
-    setPets(prev => prev.filter(pet => pet.id !== id));
-    setSelectedPetId(null);
-  };
+  // const handleCheckoutPet = (id: string) => {
+  //   setPets(prev => prev.filter(pet => pet.id !== id));
+  //   setSelectedPetId(null);
+  // };
 
-  const handleAddPet = (newPet: Omit<TPet, "id">) => {
-    setPets(prev => [...prev, { ...newPet, id: String(Date.now()) }]);
-  };
+  // const handleAddPet = async (newPet: Omit<TPet, "id">) => {
+  //   // adding pet on the client
+  //   // setPets(prev => [...prev, { ...newPet, id: String(Date.now()) }]);
 
-  const handleEditPet = (petId: string, newPetData: Omit<TPet, "id">) => {
-    setPets(prev =>
-      prev.map(pet => {
-        if (pet.id === petId) {
-          return {
-            id: petId,
-            ...newPetData,
-          };
-        }
-        return pet;
-      })
-    );
-  };
+  //   // adding pet on the database with prisma and server actions
+  //   await addPet(newPet);
+  // };
+
+  // const handleEditPet = (petId: string, newPetData: Omit<TPet, "id">) => {
+  //   setPets(prev =>
+  //     prev.map(pet => {
+  //       if (pet.id === petId) {
+  //         return {
+  //           id: petId,
+  //           ...newPetData,
+  //         };
+  //       }
+  //       return pet;
+  //     })
+  //   );
+  // };
 
   return (
     <PetContext.Provider
       value={{
         pets,
-        setPets,
         selectedPetId,
         setSelectedPetId,
         handleChangeSelectedPetId,
         selectedPet,
         numberOfPets,
-        handleCheckoutPet,
-        handleAddPet,
-        handleEditPet,
       }}
     >
       {children}
