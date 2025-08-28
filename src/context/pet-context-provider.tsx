@@ -16,14 +16,14 @@ import { Pet } from "../../generated/prisma";
 type PetContextType = {
   pets: Pet[];
   setPets?: React.Dispatch<React.SetStateAction<PetEssentials[]>>;
-  selectedPetId: string | null;
+  selectedPetId: Pet["id"] | null;
   selectedPet: Pet | undefined;
   setSelectedPetId?: React.Dispatch<React.SetStateAction<string | null>>;
   numberOfPets: number;
-  handleChangeSelectedPetId: (id: string) => void;
-  handleCheckoutPet: (id: string) => void;
   handleAddPet: (newPet: PetEssentials) => Promise<void>;
-  handleEditPet: (petId: string, newPetData: PetEssentials) => Promise<void>;
+  handleChangeSelectedPetId: (id: Pet["id"]) => void;
+  handleEditPet: (petId: Pet["id"], newPetData: PetEssentials) => Promise<void>;
+  handleCheckoutPet: (id: Pet["id"]) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -63,11 +63,11 @@ export default function PetContextProvider({
   const numberOfPets = optimisticPets.length;
 
   // event handlers
-  const handleChangeSelectedPetId = (id: string) => {
+  const handleChangeSelectedPetId = (id: Pet["id"]) => {
     setSelectedPetId(id);
   };
 
-  const handleCheckoutPet = async (id: string) => {
+  const handleCheckoutPet = async (id: Pet["id"]) => {
     startTransition(() => {
       setOptimisticPets({ action: "delete", payload: id });
     });
@@ -97,7 +97,7 @@ export default function PetContextProvider({
     }
   };
 
-  const handleEditPet = async (petId: string, newPetData: PetEssentials) => {
+  const handleEditPet = async (petId: Pet["id"], newPetData: PetEssentials) => {
     startTransition(() => {
       setOptimisticPets({ action: "edit", payload: { id: petId, newPetData } });
     });
