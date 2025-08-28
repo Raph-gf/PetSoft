@@ -543,6 +543,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
+<<<<<<< HEAD
+=======
   '@prisma/client@6.14.0':
     resolution: {integrity: sha512-8E/Nk3eL5g7RQIg/LUj1ICyDmhD053STjxrPxUtCRybs2s/2sOEcx9NpITuAOPn07HEpWBfhAVe1T/HYWXUPOw==}
     engines: {node: '>=18.18'}
@@ -555,6 +557,7 @@ packages:
       typescript:
         optional: true
 
+>>>>>>> 3bd91d7658115dba426ee2395cb0088a39dbf99b
   '@prisma/config@6.14.0':
     resolution: {integrity: sha512-IwC7o5KNNGhmblLs23swnfBjADkacBb7wvyDXUWLwuvUQciKJZqyecU0jw0d7JRkswrj+XTL8fdr0y2/VerKQQ==}
 
@@ -1226,9 +1229,12 @@ packages:
     resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
+<<<<<<< HEAD
+=======
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
+>>>>>>> 3bd91d7658115dba426ee2395cb0088a39dbf99b
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -2804,11 +2810,14 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+<<<<<<< HEAD
+=======
   '@prisma/client@6.14.0(prisma@6.14.0(typescript@5.9.2))(typescript@5.9.2)':
     optionalDependencies:
       prisma: 6.14.0(typescript@5.9.2)
       typescript: 5.9.2
 
+>>>>>>> 3bd91d7658115dba426ee2395cb0088a39dbf99b
   '@prisma/config@6.14.0':
     dependencies:
       c12: 3.1.0
@@ -3468,8 +3477,11 @@ snapshots:
 
   consola@3.4.2: {}
 
+<<<<<<< HEAD
+=======
   create-require@1.1.1: {}
 
+>>>>>>> 3bd91d7658115dba426ee2395cb0088a39dbf99b
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
