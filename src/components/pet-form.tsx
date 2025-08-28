@@ -1,18 +1,42 @@
 "use client";
 
 import React from "react";
+import z from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PetEssentials } from "@/lib/types";
+import { usePetContext } from "@/context/pet-context-provider";
+
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { usePetContext } from "@/context/pet-context-provider";
 import PetFormBtn from "./pet-form-btn";
 import { useForm } from "react-hook-form";
-import { PetEssentials } from "@/lib/types";
 
 type TActionType = {
   actionType: "add" | "edit";
   onFormSubmission: () => void;
 };
+
+// 👇 type dérivé automatiquement
+type PetFormValues = z.infer<typeof petFormSchema>;
+
+const petFormSchema = z.object({
+  name: z.string().trim().min(1, { message: "Name is required" }).max(100),
+  ownerName: z
+    .string()
+    .trim()
+    .min(1, { message: "Owner name is required" })
+    .max(100),
+  imageUrl: z.union([
+    z.literal(""),
+    z.url({ message: "Image url is not valid" }).trim(),
+  ]),
+  age: z.number().int().min(1, { message: "Age must be at least 1" }).max(99, {
+    message: "Age must be between 1 and 99",
+  }),
+  notes: z.union([z.literal(""), z.string().trim().max(1000)]),
+});
 
 export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
@@ -45,7 +69,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
     register,
     trigger,
     formState: { errors },
-  } = useForm<PetEssentials>();
+  } = useForm<PetFormValues>({ resolver: zodResolver(petFormSchema) });
 
   return (
     <form
@@ -75,30 +99,15 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
       <div className="space-y-3 mt-3 ">
         <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            {...register("name", {
-              required: "Name is required",
-            })}
-            name="name"
-          />
+          <Input id="name" {...register("name")} />
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="ownerName">Onwer Name</Label>
-          <Input
-            id="ownerName"
-            {...register("ownerName", {
-              required: "Owner name is required",
-              maxLength: {
-                value: 20,
-                message: "Owner name must not be at over 20 characters long",
-              },
-            })}
-          />
+          <Input id="ownerName" {...register("ownerName")} />
           {errors.ownerName && (
-            <p className="text-red-500">{errors.ownerName.message}</p>
+            <p className="text-sm text-red-500">{errors.ownerName.message}</p>
           )}
         </div>
 
@@ -112,7 +121,12 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
 
         <div className="space-y-2">
           <Label htmlFor="age">Age</Label>
-          <Input id="age" {...register("age", {})} />
+          <Input
+            id="age"
+            type="number"
+            min={0}
+            {...register("age", { valueAsNumber: true })}
+          />
           {errors.age && <p className="text-red-500">{errors.age.message}</p>}
         </div>
 
