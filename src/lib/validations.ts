@@ -3,9 +3,11 @@ import { DEFAULT_PET_IMAGE } from "./constants";
 
 export type PetFormValues = z.infer<typeof petFormSchema>;
 
+export const petIdSchema = z.cuid();
+
 export const petFormSchema = z
   .object({
-    name: z.string().trim().min(1, { message: "Name is required" }).max(100),
+    name: z.string().trim().min(1, { message: "Name is required" }).max(10),
     ownerName: z
       .string()
       .trim()
