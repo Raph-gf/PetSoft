@@ -4,7 +4,6 @@ import React from "react";
 import z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PetEssentials } from "@/lib/types";
 import { usePetContext } from "@/context/pet-context-provider";
 
 import { Label } from "./ui/label";
@@ -12,31 +11,13 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import PetFormBtn from "./pet-form-btn";
 import { useForm } from "react-hook-form";
+import { DEFAULT_PET_IMAGE } from "@/lib/constants";
+import { PetFormValues, petFormSchema } from "@/lib/validations";
 
 type TActionType = {
   actionType: "add" | "edit";
   onFormSubmission: () => void;
 };
-
-// 👇 type dérivé automatiquement
-type PetFormValues = z.infer<typeof petFormSchema>;
-
-const petFormSchema = z.object({
-  name: z.string().trim().min(1, { message: "Name is required" }).max(100),
-  ownerName: z
-    .string()
-    .trim()
-    .min(1, { message: "Owner name is required" })
-    .max(100),
-  imageUrl: z.union([
-    z.literal(""),
-    z.url({ message: "Image url is not valid" }).trim(),
-  ]),
-  age: z.number().int().min(1, { message: "Age must be at least 1" }).max(99, {
-    message: "Age must be between 1 and 99",
-  }),
-  notes: z.union([z.literal(""), z.string().trim().max(1000)]),
-});
 
 export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
@@ -68,8 +49,21 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   const {
     register,
     trigger,
+    getValues,
     formState: { errors },
-  } = useForm<PetFormValues>({ resolver: zodResolver(petFormSchema) });
+  } = useForm<PetFormValues>({
+    resolver: zodResolver(petFormSchema),
+    defaultValues:
+      actionType === "edit" && selectedPet
+        ? {
+            name: selectedPet.name,
+            ownerName: selectedPet.ownerName,
+            imageUrl: selectedPet.imageUrl,
+            age: selectedPet.age,
+            notes: selectedPet.notes || "",
+          }
+        : undefined,
+  });
 
   return (
     <form
@@ -79,16 +73,19 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
         if (!result) return;
 
         onFormSubmission();
+        // const petData = {
+        //   name: formData.get("name") as string,
+        //   ownerName: formData.get("ownerName") as string,
+        //   imageUrl:
+        //     (formData.get("imageUrl") as string) ||
+        //     "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=100&w=1935&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        //   age: parseInt(formData.get("age") as string),
+        //   notes: formData.get("notes") as string,
+        // };
 
-        const petData = {
-          name: formData.get("name") as string,
-          ownerName: formData.get("ownerName") as string,
-          imageUrl:
-            (formData.get("imageUrl") as string) ||
-            "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=100&w=1935&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          age: parseInt(formData.get("age") as string),
-          notes: formData.get("notes") as string,
-        };
+        const petData = getValues();
+        petData.imageUrl = petData.imageUrl || DEFAULT_PET_IMAGE;
+
         if (actionType === "add") {
           await handleAddPet(petData);
         } else if (actionType === "edit") {

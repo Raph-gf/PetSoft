@@ -28,7 +28,7 @@ export default function PetList() {
             )}
           >
             <Image
-              src={pet.imageUrl ?? logo}
+              src={typeof pet.imageUrl === "string" ? pet.imageUrl : logo}
               alt="Pet image"
               width={45}
               height={45}
