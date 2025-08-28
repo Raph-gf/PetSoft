@@ -5,9 +5,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/context/pet-context-provider";
-import { addPet, editPet } from "@/actions/actions";
 import PetFormBtn from "./pet-form-btn";
-import { toast } from "sonner";
 
 type TActionType = {
   actionType: "add" | "edit";
@@ -15,7 +13,7 @@ type TActionType = {
 };
 
 export default function PetForm({ actionType, onFormSubmission }: TActionType) {
-  const { selectedPet } = usePetContext();
+  const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
   // const [error,formAction] = useFormState(addPet,{})
   // adding a new pet or editing a pet on the client side via the handleSubmit function
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -44,22 +42,22 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
   return (
     <form
       action={async formData => {
-        if (actionType === "add") {
-          const error = await addPet(formData);
-          if (error) {
-            toast.warning(error.message);
-            return;
-          }
-          toast.success("Pet added succesfully");
-        } else if (actionType === "edit") {
-          const error = await editPet(selectedPet?.id, formData);
-          if (error) {
-            toast.warning(error.message);
-            return;
-          }
-          toast.success("Pet edited succesfully");
-        }
         onFormSubmission();
+
+        const petData = {
+          name: formData.get("name") as string,
+          ownerName: formData.get("ownerName") as string,
+          imageUrl:
+            (formData.get("imageUrl") as string) ||
+            "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=100&w=1935&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          age: parseInt(formData.get("age") as string),
+          notes: formData.get("notes") as string,
+        };
+        if (actionType === "add") {
+          await handleAddPet(petData);
+        } else if (actionType === "edit") {
+          await handleEditPet(selectedPet!.id, petData);
+        }
       }}
       className="flex flex-col"
     >
