@@ -5,8 +5,6 @@ import Image from "next/image";
 import logo from "../../public/logo.svg";
 import { TPet } from "@/lib/types";
 import PetButton from "./pet-buttons";
-import { deletePet } from "@/actions/actions";
-import { toast } from "sonner";
 import { useTransition } from "react";
 
 type TPetProps = {
@@ -33,6 +31,7 @@ export default function PetDetails() {
 
 function TopBar({ pet }: TPetProps) {
   const [isPending, startTransition] = useTransition();
+  const { handleCheckoutPet } = usePetContext();
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
@@ -50,15 +49,7 @@ function TopBar({ pet }: TPetProps) {
         <PetButton
           actionType="checkout"
           disabled={isPending}
-          onClick={async () => {
-            startTransition(async () => {});
-            const error = await deletePet(pet.id);
-            if (error) {
-              toast.error(error.message);
-            } else {
-              toast.success("Pet deleted succesfully");
-            }
-          }}
+          onClick={async () => await handleCheckoutPet(pet?.id)}
         >
           Checkout
         </PetButton>
