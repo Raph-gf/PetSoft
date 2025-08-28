@@ -4,7 +4,6 @@ import BackgroundPattern from "@/components/background-pattern";
 import PetContextProvider from "@/context/pet-context-provider";
 import SearchContextProvider from "@/context/search-context-provider";
 import prisma from "@/lib/db";
-import { TPet } from "@/lib/types";
 import { Toaster } from "sonner";
 
 export default async function PrivateAppLayout({
