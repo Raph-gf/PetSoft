@@ -11,7 +11,10 @@ export default async function PrivateAppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await prisma.pet.findMany();
+  const pets = await prisma.pet.findMany();
+  // const user = await prisma.user.findUnique({
+  //   where
+  // })
 
   return (
     <>
@@ -20,7 +23,7 @@ export default async function PrivateAppLayout({
         <AppHeader />
 
         <SearchContextProvider>
-          <PetContextProvider data={data}>{children}</PetContextProvider>
+          <PetContextProvider data={pets}>{children}</PetContextProvider>
         </SearchContextProvider>
 
         <AppFooter />
