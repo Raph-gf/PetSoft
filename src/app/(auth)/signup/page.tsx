@@ -6,13 +6,14 @@ export default function SignupPage() {
   return (
     <main>
       <H1 className="text-center mb-5">Sign Up</H1>
-      <AuthForm />
-      <p className="mt-6 text-sm text-zinc-500">
-        Already have a account?
+
+      <AuthForm>Sign up</AuthForm>
+
+      <p className="mt-6 text-sm text-zinc-500 text-center">
+        <span className="mr-1.5">Already have a account?</span>
         <Link href="/login" className="font-medium">
           Log in
         </Link>
-        `
       </p>
     </main>
   );
