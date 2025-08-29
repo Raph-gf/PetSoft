@@ -7,7 +7,7 @@ export default function SignupPage() {
     <main>
       <H1 className="text-center mb-5">Sign Up</H1>
 
-      <AuthForm>Sign up</AuthForm>
+      <AuthForm type="signin" />
 
       <p className="mt-6 text-sm text-zinc-500 text-center">
         <span className="mr-1.5">Already have a account?</span>
