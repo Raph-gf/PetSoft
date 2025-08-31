@@ -34,14 +34,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  // callbacks: {
-  //   async signIn({ user }) {
-  //     // user vient de authorize
-  //     if (!user) {
-  //       // Redirection si credentials invalides
-  //       return "/login";
-  //     }
-  //     return true; // tout est ok, laisse passer
-  //   },
-  // },
+  callbacks: {
+    jwt: ({ token, user }) => {
+      if (user) {
+        token.userId = user.id;
+      }
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (session?.user && typeof token.userId === "string") {
+        session.user.id = token.userId;
+      }
+      return session;
+    },
+  },
 });
