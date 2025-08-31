@@ -71,6 +71,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
         const result = await trigger();
         if (!result) return;
 
+        // to close the form
         onFormSubmission();
         // const petData = {
         //   name: formData.get("name") as string,
