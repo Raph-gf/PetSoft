@@ -1,4 +1,4 @@
-import { loginAction } from "@/actions/actions";
+import { loginAction, signUpAction } from "@/actions/actions";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -11,7 +11,10 @@ type AuthFormProps = {
 export default function AuthForm({ type }: AuthFormProps) {
   return (
     <div className="w-[300px] h-[260px] px-6 py-8 border-[0.3px] rounded-sm shadow-lg ring">
-      <form action={loginAction} className="space-y-4 w-full h-full">
+      <form
+        action={type === "login" ? loginAction : signUpAction}
+        className="space-y-4 w-full h-full"
+      >
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" name="email" type="email" />

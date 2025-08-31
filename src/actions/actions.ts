@@ -1,16 +1,47 @@
 "use server";
 
 import prisma from "@/lib/db";
+import bcrypt from "bcrypt";
 import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { petFormSchema, petIdSchema } from "@/lib/validations";
 import { signIn, signOut } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 // user action
 
 export async function loginAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+
+  await signIn("credentials", {
+    email,
+    password,
+    redirectTo: "/app/dashboard",
+  });
+}
+
+export async function signUpAction(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Création user
+  const user = await prisma.user.create({
+    data: {
+      email,
+      hashedPassword,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User could not be created");
+  }
 
   await signIn("credentials", {
     email,
