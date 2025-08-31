@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { getUserByEmail } from "./server-utils";
+import { authSchema, TAuth } from "./validations";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -11,6 +12,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async credentials => {
+        const validatedCredentials = authSchema.safeParse(credentials);
+        if (!validatedCredentials.success)
+          return { message: "Invalid form data" };
+
         if (!credentials?.email || !credentials?.password) {
           return null;
         }

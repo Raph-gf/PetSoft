@@ -13,18 +13,9 @@ import { checkAuth, getPetByPetId } from "@/lib/server-utils";
 export async function loginAction(formData: FormData) {
   // check if formData is a FormData type
 
-  if (!(formData instanceof FormData)) throw new Error("Invalid form data");
-
-  const formDataObject = Object.fromEntries(formData.entries());
-
-  const validatedFormDataObject = authSchema.safeParse(formDataObject);
-  if (!validatedFormDataObject.success) {
-    throw new Error("Invalid form data");
-  }
-
   await signIn("credentials", {
-    email: validatedFormDataObject.data.email,
-    password: validatedFormDataObject.data.password,
+    email: formData.get("email"),
+    password: formData.get("password"),
     redirectTo: "/app/dashboard",
   });
 }
