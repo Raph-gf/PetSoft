@@ -5,16 +5,20 @@ import type { NextRequest } from "next/server";
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-  // Si l'utilisateur n'a pas de token et qu'il essaie d'accéder à une page privée
-  if (!token && req.nextUrl.pathname.startsWith("/app")) {
-    const loginUrl = new URL("/login", req.url);
-    return NextResponse.redirect(loginUrl);
+  const isAuthRoute = req.nextUrl.pathname.startsWith("/app");
+  const isPublicRoute = !isAuthRoute;
+
+  if (!token && isAuthRoute) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Sinon, on laisse passer la requête
+  if (token && isPublicRoute) {
+    return NextResponse.redirect(new URL("/app/dashboard", req.nextUrl));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/app/:path*"], // middleware s'applique uniquement aux routes commençant par /app
+  matcher: ["/", "/login", "/signup", "/app/:path*"],
 };
