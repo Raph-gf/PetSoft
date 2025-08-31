@@ -4,7 +4,7 @@ import prisma from "@/lib/db";
 import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { petFormSchema, petIdSchema } from "@/lib/validations";
-import { signIn } from "@/lib/auth";
+import { signIn, signOut } from "@/lib/auth";
 
 // user action
 
@@ -17,6 +17,10 @@ export async function loginAction(formData: FormData) {
     password,
     redirectTo: "/app/dashboard",
   });
+}
+
+export async function logOutAction() {
+  await signOut({ redirectTo: "/" });
 }
 
 // pet action
