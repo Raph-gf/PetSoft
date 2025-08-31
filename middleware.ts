@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
-export default auth(req => {
+export default auth((req: { auth?: any; nextUrl?: any }) => {
   const { nextUrl } = req;
   const isAuthRoute = nextUrl.pathname.startsWith("/app");
   const isPublicRoute = !isAuthRoute;

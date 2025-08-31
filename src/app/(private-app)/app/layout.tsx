@@ -6,8 +6,8 @@ import SearchContextProvider from "@/context/search-context-provider";
 
 import { Toaster } from "sonner";
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/db";
 import { redirect } from "next/navigation";
+import { getPetsByUserId } from "@/lib/server-utils";
 
 export default async function PrivateAppLayout({
   children,
@@ -19,11 +19,7 @@ export default async function PrivateAppLayout({
     redirect("/login");
   }
 
-  const pets = await prisma.pet.findMany({
-    where: {
-      userId: session.user.id,
-    },
-  });
+  const pets = await getPetsByUserId(session.user.id);
 
   return (
     <>
