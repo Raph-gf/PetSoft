@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { authSchema, petFormSchema, petIdSchema } from "@/lib/validations";
 import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetByPetId } from "@/lib/server-utils";
+import { Prisma } from "../../generated/prisma";
 
 // user action
 
@@ -41,15 +42,21 @@ export async function signUpAction(formData: FormData) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Création user
-  const user = await prisma.user.create({
-    data: {
-      email,
-      hashedPassword,
-    },
-  });
-
-  if (!user) {
-    throw new Error("User could not be created");
+  try {
+    const user = await prisma.user.create({
+      data: {
+        email,
+        hashedPassword,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return {
+          message: "Email already exists",
+        };
+      }
+    }
   }
 
   await signIn("credentials", {
