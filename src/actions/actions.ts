@@ -8,20 +8,40 @@ import { authSchema, petFormSchema, petIdSchema } from "@/lib/validations";
 import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetByPetId } from "@/lib/server-utils";
 import { Prisma } from "../../generated/prisma";
+import { AuthActionResult } from "@/lib/types";
 
 // user action
 
-export async function loginAction(formData: FormData) {
-  // check if formData is a FormData type
+export async function loginAction(
+  prevState: AuthActionResult | null,
+  formData: FormData
+): Promise<AuthActionResult> {
+  await sleep(1000);
 
-  await signIn("credentials", {
-    email: formData.get("email"),
-    password: formData.get("password"),
-    redirectTo: "/app/dashboard",
-  });
+  try {
+    await signIn("credentials", {
+      email: formData.get("email"),
+      password: formData.get("password"),
+      redirectTo: "/app/dashboard",
+    });
+    return {
+      success: true,
+      message: "Logged in successfully!",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Login failed",
+    };
+  }
 }
 
-export async function signUpAction(formData: FormData) {
+export async function signUpAction(
+  prevState: AuthActionResult | null,
+  formData: FormData
+): Promise<AuthActionResult> {
+  await sleep(1000);
+
   const signUpUser = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
@@ -34,7 +54,8 @@ export async function signUpAction(formData: FormData) {
   const validatedSignUpUser = authSchema.safeParse(signUpUser);
   if (!validatedSignUpUser.success) {
     return {
-      message: "Invalid form data",
+      success: false,
+      message: "Email and password are required",
     };
   }
   const { email, password } = validatedSignUpUser.data;
@@ -49,21 +70,28 @@ export async function signUpAction(formData: FormData) {
         hashedPassword,
       },
     });
+
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/app/dashboard",
+    });
+
+    return { success: true, message: "Account created successfully!" };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return {
+          success: false,
           message: "Email already exists",
         };
       }
     }
+    return {
+      success: false,
+      message: "An error occurred during registration",
+    };
   }
-
-  await signIn("credentials", {
-    email,
-    password,
-    redirectTo: "/app/dashboard",
-  });
 }
 
 export async function logOutAction() {
