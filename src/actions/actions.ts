@@ -21,12 +21,22 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function signUpAction(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const signUpUser = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  };
 
-  if (!email || !password) {
+  if (!signUpUser.email || !signUpUser.password) {
     throw new Error("Email and password are required");
   }
+
+  const validatedSignUpUser = authSchema.safeParse(signUpUser);
+  if (!validatedSignUpUser.success) {
+    return {
+      message: "Invalid form data",
+    };
+  }
+  const { email, password } = validatedSignUpUser.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
