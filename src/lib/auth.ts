@@ -28,25 +28,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.hashedPassword
         );
         if (!isValid) return null;
+        console.log(user);
 
-        // Retourne l’objet user
         return {
           id: user.id,
           email: user.email,
+          hasAccess: user.hasAccess,
         };
       },
     }),
   ],
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user) {
         token.userId = user.id;
+        token.email = user.email;
+        token.hasAccess = (user as any).hasAccess ?? false;
+      }
+      if (trigger === "update") {
+        const userFromDb = await getUserByEmail(token.email as string);
+        if (userFromDb) {
+          token.hasAccess = userFromDb.hasAccess;
+        }
       }
       return token;
     },
     session: ({ session, token }) => {
       if (session?.user && typeof token.userId === "string") {
         session.user.id = token.userId;
+        session.user.hasAccess = token.hasAccess as boolean;
       }
       return session;
     },
