@@ -84,6 +84,7 @@ export async function signUpAction(
         hashedPassword,
       },
     });
+    console.log(user);
 
     await signIn("credentials", {
       email,
@@ -164,6 +165,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
     });
     revalidatePath("private-app/app", "layout");
   } catch (error) {
+    console.log(error);
     return {
       message: "Could not edit pet",
     };
@@ -193,6 +195,7 @@ export async function deletePet(petId: unknown) {
       },
     });
   } catch (error) {
+    console.log(error);
     return {
       message: "Could not delete pet",
     };
