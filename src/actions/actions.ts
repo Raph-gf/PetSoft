@@ -10,6 +10,10 @@ import { checkAuth, getPetByPetId } from "@/lib/server-utils";
 import { Prisma } from "../../generated/prisma";
 import { AuthActionResult } from "@/lib/types";
 import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
+
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // user action
 export async function loginAction(
@@ -22,7 +26,7 @@ export async function loginAction(
     await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-      redirectTo: "/app/dashboard",
+      redirectTo: "/payment",
     });
     return {
       success: true,
@@ -87,7 +91,7 @@ export async function signUpAction(
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/app/dashboard",
+      redirectTo: "/payment",
     });
 
     return { success: true, message: "Account created successfully!" };
@@ -202,4 +206,28 @@ export async function deletePet(petId: unknown) {
     };
   }
   revalidatePath("private-app/app", "layout");
+}
+
+// --- payement actions ---
+
+export async function createCheckoutSession() {
+  // authentication check
+  const session = await checkAuth();
+
+  // redirect user to checkout Page
+  const checkoutSession = await stripe.checkout.sessions.create({
+    customer_email: session.user.email,
+    line_items: [
+      {
+        price: process.env.STRIPE_PRICE_ID,
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `${process.env.APP_URL}/payment?success=true`,
+    cancel_url: `${process.env.APP_URL}/payment?cancelled=true`,
+  });
+
+  // redirect user
+  redirect(checkoutSession.url);
 }
