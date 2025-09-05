@@ -1,19 +1,23 @@
-// middleware.ts à la racine
-
-import { auth } from "@/lib/auth";
+// middleware.ts
+import { auth } from "@/lib/auth-edge";
 import { NextResponse } from "next/server";
 
-export default auth((req: { auth?: any; nextUrl?: any }) => {
-  const { nextUrl } = req;
-  const isAuthRoute = nextUrl.pathname.startsWith("/app");
-  const isPublicRoute = !isAuthRoute;
+interface AuthRequest {
+  nextUrl: URL;
+  auth?: unknown;
+}
 
-  // Si l'utilisateur n'est pas authentifié et tente d'accéder à une route privée
+type AuthHandler = (req: AuthRequest) => NextResponse;
+
+export default auth((req: AuthRequest): NextResponse => {
+  const { nextUrl } = req;
+  const isAuthRoute: boolean = nextUrl.pathname.startsWith("/app");
+  const isPublicRoute: boolean = !isAuthRoute;
+
   if (!req.auth && isAuthRoute) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
-  // Si l'utilisateur est authentifié et tente d'accéder à une route publique
   if (req.auth && isPublicRoute) {
     return NextResponse.redirect(new URL("/app/dashboard", nextUrl));
   }

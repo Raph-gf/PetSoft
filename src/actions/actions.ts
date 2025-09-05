@@ -9,9 +9,9 @@ import { signIn, signOut } from "@/lib/auth";
 import { checkAuth, getPetByPetId } from "@/lib/server-utils";
 import { Prisma } from "../../generated/prisma";
 import { AuthActionResult } from "@/lib/types";
+import { AuthError } from "next-auth";
 
 // user action
-
 export async function loginAction(
   prevState: AuthActionResult | null,
   formData: FormData
@@ -29,13 +29,26 @@ export async function loginAction(
       message: "Logged in successfully!",
     };
   } catch (error) {
-    return {
-      success: false,
-      message: "Login failed",
-    };
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin": {
+          return {
+            message: "Invalid credentials",
+            success: false,
+          };
+        }
+        default: {
+          return {
+            message: "Could not sign in.",
+            success: false,
+          };
+        }
+      }
+    }
+
+    throw error; // nextjs redirect throws a error, so we need to rethrow it
   }
 }
-
 export async function signUpAction(
   prevState: AuthActionResult | null,
   formData: FormData
@@ -87,19 +100,15 @@ export async function signUpAction(
         };
       }
     }
-    return {
-      success: false,
-      message: "An error occurred during registration",
-    };
+    throw error;
   }
 }
-
 export async function logOutAction() {
+  await sleep(1000);
   await signOut({ redirectTo: "/" });
 }
 
 // pet action
-
 export async function addPet(pet: unknown) {
   await sleep(1000);
 
@@ -130,7 +139,6 @@ export async function addPet(pet: unknown) {
     return { message: "Could not add pet" };
   }
 }
-
 export async function editPet(petId: unknown, newPetData: unknown) {
   await sleep(1000);
 
@@ -165,7 +173,6 @@ export async function editPet(petId: unknown, newPetData: unknown) {
     };
   }
 }
-
 export async function deletePet(petId: unknown) {
   const session = await checkAuth();
 

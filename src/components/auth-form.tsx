@@ -23,7 +23,7 @@ export default function AuthForm({ type }: AuthFormProps) {
   >(type === "login" ? loginAction : signUpAction, null);
 
   return (
-    <div className="w-[300px] h-[260px] px-6 py-8 border-[0.3px] rounded-sm shadow-lg ring">
+    <div className="w-[300px] h-[300px] px-6 py-8 border-[0.3px] rounded-sm shadow-lg ring">
       <form
         action={type === "login" ? dispatchLogin : dispatchSignUp}
         className="space-y-4 w-full h-full"
@@ -51,12 +51,12 @@ export default function AuthForm({ type }: AuthFormProps) {
         </div>
         <AuthFormBtn type={type} />
         {signUpErrorState && (
-          <p className="text-red-500 text-sm mt-7">
+          <p className="text-red-500 text-sm mt-2">
             {signUpErrorState.message}
           </p>
         )}
         {loginUpErrorState && (
-          <p className="text-red-500 text-sm mt-7">
+          <p className="text-red-500 text-sm mt-2">
             {loginUpErrorState.message}
           </p>
         )}
