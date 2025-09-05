@@ -7,12 +7,12 @@ declare module "next-auth" {
   interface Session {
     user: User & {
       id: string;
-      hasAccess?: boolean;
     };
   }
 }
 declare module "next-auth/jwt";
 interface JWT {
   userId: string;
+  email: string;
   hasAccess?: boolean;
 }

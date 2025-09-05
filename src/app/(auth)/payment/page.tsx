@@ -5,6 +5,9 @@ import H1 from "@/components/h1";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { useTransition } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/navigation";
 
 type SearchParamsType = {
   success?: string | string[];
@@ -17,11 +20,25 @@ function PayementPage({
   searchParams: Promise<SearchParamsType>;
 }) {
   const [isPending, startTransition] = useTransition();
+  const { data: session, update, status } = useSession();
   const params = React.use(searchParams);
+  const router = useRouter();
 
   return (
     <main className="flex flex-col items-center space-y-10">
       <H1>PetSoft access requires payment</H1>
+
+      {params.success && (
+        <Button
+          disabled={status === "loading" || session?.user.hasAccess}
+          onClick={async () => {
+            await update(true);
+            router.push("/app/dashboard");
+          }}
+        >
+          Acces PetSoft
+        </Button>
+      )}
 
       {!params.success && (
         <Button
