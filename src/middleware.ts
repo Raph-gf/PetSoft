@@ -16,7 +16,6 @@ export async function middleware(req: NextRequest) {
   console.log("Middleware token:", userIsConnected);
 
   const isAuthRoute = pathname.startsWith("/app");
-  const isPublicRoute = !isAuthRoute;
 
   // Non connecté → bloque les routes privées
   if (!userIsConnected && isAuthRoute) {

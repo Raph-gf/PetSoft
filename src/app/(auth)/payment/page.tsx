@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { useTransition } from "react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 
 type SearchParamsType = {

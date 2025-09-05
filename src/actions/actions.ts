@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/db";
 import bcrypt from "bcrypt";
-import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { authSchema, petFormSchema, petIdSchema } from "@/lib/validations";
 import { signIn, signOut } from "@/lib/auth";
