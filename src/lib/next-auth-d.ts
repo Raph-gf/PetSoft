@@ -1,13 +1,18 @@
 import { User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+
 declare module "next-auth" {
+  interface User {
+    hasAccess?: boolean;
+  }
   interface Session {
     user: User & {
       id: string;
+      hasAccess?: boolean;
     };
   }
 }
 declare module "next-auth/jwt";
 interface JWT {
   userId: string;
+  hasAccess?: boolean;
 }

@@ -13,6 +13,8 @@ export async function middleware(req: NextRequest) {
 
   const { pathname } = req.nextUrl;
 
+  console.log("Middleware token:", userIsConnected);
+
   const isAuthRoute = pathname.startsWith("/app");
   const isPublicRoute = !isAuthRoute;
 
@@ -21,7 +23,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (userIsConnected && isAuthRoute && userIsConnected.hasAccess) {
+  if (userIsConnected && isAuthRoute && !userIsConnected?.hasAccess) {
+    return NextResponse.redirect(new URL("/payment", req.url));
+  }
+
+  if (userIsConnected && isAuthRoute && userIsConnected?.hasAccess) {
     return NextResponse.next();
   }
 
@@ -37,5 +43,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/signup", "/app/:path*"],
+  matcher: ["/", "/payment", "/login", "/signup", "/app/:path*"],
 };

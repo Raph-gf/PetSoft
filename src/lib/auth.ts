@@ -28,11 +28,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.hashedPassword
         );
         if (!isValid) return null;
+        console.log(user);
 
-        // Retourne l’objet user
         return {
           id: user.id,
           email: user.email,
+          hasAccess: user.hasAccess,
         };
       },
     }),
@@ -41,12 +42,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt: ({ token, user }) => {
       if (user) {
         token.userId = user.id;
+        token.hasAccess = (user as any).hasAccess ?? false;
       }
       return token;
     },
     session: ({ session, token }) => {
       if (session?.user && typeof token.userId === "string") {
         session.user.id = token.userId;
+        session.user.hasAccess = token.hasAccess as boolean;
       }
       return session;
     },
