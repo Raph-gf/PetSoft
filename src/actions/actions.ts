@@ -20,14 +20,14 @@ export async function loginAction(
   prevState: AuthActionResult | null,
   formData: FormData
 ): Promise<AuthActionResult> {
-  await sleep(1000);
-
   try {
     await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-      redirectTo: "/payment",
+      redirectTo: "/app/dashboard",
+      callbackUrl: "/app/dashboard",
     });
+
     return {
       success: true,
       message: "Logged in successfully!",
@@ -57,8 +57,6 @@ export async function signUpAction(
   prevState: AuthActionResult | null,
   formData: FormData
 ): Promise<AuthActionResult> {
-  await sleep(1000);
-
   const signUpUser = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
@@ -108,14 +106,11 @@ export async function signUpAction(
   }
 }
 export async function logOutAction() {
-  await sleep(1000);
   await signOut({ redirectTo: "/" });
 }
 
 // pet action
 export async function addPet(pet: unknown) {
-  await sleep(1000);
-
   const session = await checkAuth();
 
   const validatedPet = petFormSchema.safeParse(pet);
@@ -144,8 +139,6 @@ export async function addPet(pet: unknown) {
   }
 }
 export async function editPet(petId: unknown, newPetData: unknown) {
-  await sleep(1000);
-
   const session = await checkAuth();
 
   const validatedPetId = petIdSchema.safeParse(petId);
@@ -216,7 +209,7 @@ export async function createCheckoutSession() {
 
   // redirect user to checkout Page
   const checkoutSession = await stripe.checkout.sessions.create({
-    customer_email: session.user.email,
+    customer_email: session.user.email ?? undefined,
     line_items: [
       {
         price: process.env.STRIPE_PRICE_ID,
@@ -229,5 +222,8 @@ export async function createCheckoutSession() {
   });
 
   // redirect user
+  if (!checkoutSession.url) {
+    throw new Error("Stripe checkout session URL is missing");
+  }
   redirect(checkoutSession.url);
 }

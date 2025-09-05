@@ -1,24 +1,59 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
-  const event = await request.json();
+  const body = await request.text();
+  const signature = request.headers.get("stripe-signature");
 
-  // Récupère correctement l'email du client
-  const email = event.data?.object?.customer_email;
-
-  if (!email) {
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.error("Missing Stripe webhook secret in environment variables");
     return NextResponse.json(
-      { error: "No customer email in webhook" },
-      { status: 400 }
+      { error: "Webhook secret not configured" },
+      { status: 500 }
     );
   }
 
-  // Met à jour l'accès de l'utilisateur
-  await prisma.user.update({
-    where: { email },
-    data: { hasAccess: true },
-  });
+  if (!signature) {
+    console.log("No Stripe signature found in headers");
+    return NextResponse.json({ error: "Missing signature" }, { status: 400 });
+  }
+
+  // Verify webhook from Stripe
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (error) {
+    console.log("Webhook verification failed", error);
+    return NextResponse.json(null, { status: 400 });
+  }
+
+  switch (event.type) {
+    case "checkout.session.completed":
+      const email = event.data?.object?.customer_email;
+
+      if (!email) {
+        return NextResponse.json(
+          { error: "No customer email in webhook" },
+          { status: 400 }
+        );
+      }
+
+      // Met à jour l'accès de l'utilisateur
+      await prisma.user.update({
+        where: { email },
+        data: { hasAccess: true },
+      });
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
 
   return NextResponse.json({ received: true }, { status: 200 });
 }

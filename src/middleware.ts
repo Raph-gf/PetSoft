@@ -31,6 +31,16 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (
+    userIsConnected &&
+    (pathname.includes("/login") ||
+      pathname.includes("/signup") ||
+      pathname.includes("/payment")) &&
+    userIsConnected?.hasAccess
+  ) {
+    return NextResponse.redirect(new URL("app/dashboard", req.url));
+  }
+
   // Connecté → empêche l'accès aux routes publiques
   if (
     userIsConnected &&
