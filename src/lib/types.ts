@@ -11,4 +11,17 @@ import { Pet } from "../../generated/prisma";
 
 // Prisma type
 
-export type PetEssentials = Omit<Pet, "id" | "createdAt" | "updatedAt">;
+export type PetEssentials = Omit<
+  Pet,
+  "id" | "createdAt" | "updatedAt" | "userId"
+>;
+
+export type AuthActionResult = {
+  success: boolean;
+  message: string;
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+  redirectTo?: string;
+};

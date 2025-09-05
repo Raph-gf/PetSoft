@@ -3,15 +3,23 @@ import AppHeader from "@/components/app-header";
 import BackgroundPattern from "@/components/background-pattern";
 import PetContextProvider from "@/context/pet-context-provider";
 import SearchContextProvider from "@/context/search-context-provider";
-import prisma from "@/lib/db";
+
 import { Toaster } from "sonner";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { getPetsByUserId } from "@/lib/server-utils";
 
 export default async function PrivateAppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const data = await prisma.pet.findMany();
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const pets = await getPetsByUserId(session.user.id);
 
   return (
     <>
@@ -20,7 +28,7 @@ export default async function PrivateAppLayout({
         <AppHeader />
 
         <SearchContextProvider>
-          <PetContextProvider data={data}>{children}</PetContextProvider>
+          <PetContextProvider data={pets}>{children}</PetContextProvider>
         </SearchContextProvider>
 
         <AppFooter />

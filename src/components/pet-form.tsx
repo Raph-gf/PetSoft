@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePetContext } from "@/context/pet-context-provider";
@@ -72,6 +71,7 @@ export default function PetForm({ actionType, onFormSubmission }: TActionType) {
         const result = await trigger();
         if (!result) return;
 
+        // to close the form
         onFormSubmission();
         // const petData = {
         //   name: formData.get("name") as string,
