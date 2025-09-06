@@ -43,7 +43,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.userId = user.id;
         token.email = user.email;
-        token.hasAccess = (user as any).hasAccess ?? false;
+        token.hasAccess = user.hasAccess ?? false;
       }
       if (trigger === "update") {
         console.log("Refreshing token for", token.email);
