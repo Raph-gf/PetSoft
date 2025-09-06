@@ -7,6 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
+  console.log(body);
 
   if (!process.env.STRIPE_WEBHOOK_SECRET) {
     console.error("Missing Stripe webhook secret in environment variables");
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
       console.log("Webhook updated user:", user);
       break;
     default:
-      console.log(`Unhandled event type ${event.type}`);
+    // console.log(`Unhandled event type ${event.type}`);
   }
 
   return NextResponse.json({ received: true }, { status: 200 });

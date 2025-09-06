@@ -34,7 +34,7 @@ function PayementPage({
         <Button
           disabled={status === "loading" || session?.user.hasAccess}
           onClick={async () => {
-            await update();
+            await update(true);
             router.push("/app/dashboard");
           }}
         >
