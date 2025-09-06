@@ -22,7 +22,6 @@ export default async function PrivateAppLayout({
   const pets = await getPetsByUserId(session.user.id);
 
   if (!pets) {
-    // Handle the case where pets is undefined
     return null;
   }
 
