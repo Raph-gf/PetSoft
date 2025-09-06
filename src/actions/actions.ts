@@ -20,11 +20,16 @@ export async function loginAction(
   formData: FormData
 ): Promise<AuthActionResult> {
   try {
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-      redirectTo: "/app/dashboard",
+      redirect: false, // important pour contrôler la redirection manuellement
     });
+
+    if (res?.ok) {
+      // Redirection manuelle selon ton logique
+      redirect("/app/dashboard"); // ← redirect ici, avant le return
+    }
 
     return {
       success: true,
