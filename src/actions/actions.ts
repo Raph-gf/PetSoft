@@ -23,13 +23,8 @@ export async function loginAction(
     const res = await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-      redirect: false, // important pour contrôler la redirection manuellement
+      redirectTo: "app/dashboard",
     });
-
-    if (res?.ok) {
-      // Redirection manuelle selon ton logique
-      redirect("/app/dashboard"); // ← redirect ici, avant le return
-    }
 
     return {
       success: true,
