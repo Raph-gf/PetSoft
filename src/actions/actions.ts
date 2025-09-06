@@ -208,6 +208,7 @@ export async function deletePet(petId: unknown) {
 export async function createCheckoutSession() {
   // authentication check
   const session = await checkAuth();
+  console.log(session);
 
   // redirect user to checkout Page
   const checkoutSession = await stripe.checkout.sessions.create({

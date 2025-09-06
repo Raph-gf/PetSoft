@@ -23,6 +23,9 @@ function PayementPage({
   const params = React.use(searchParams);
   const router = useRouter();
 
+  console.log(session);
+  console.log(params);
+
   return (
     <main className="flex flex-col items-center space-y-10">
       <H1>PetSoft access requires payment</H1>
@@ -31,7 +34,7 @@ function PayementPage({
         <Button
           disabled={status === "loading" || session?.user.hasAccess}
           onClick={async () => {
-            await update(true);
+            await update();
             router.push("/app/dashboard");
           }}
         >

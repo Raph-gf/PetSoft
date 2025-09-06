@@ -37,6 +37,7 @@ export async function POST(request: Request) {
   switch (event.type) {
     case "checkout.session.completed":
       const email = event.data?.object?.customer_email;
+      console.log(email);
 
       if (!email) {
         return NextResponse.json(
@@ -46,10 +47,12 @@ export async function POST(request: Request) {
       }
 
       // Met à jour l'accès de l'utilisateur
-      await prisma.user.update({
+      const user = await prisma.user.update({
         where: { email },
         data: { hasAccess: true },
+        select: { email: true, hasAccess: true }, // 🔥 assure que tu le vois bien
       });
+      console.log("Webhook updated user:", user);
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
