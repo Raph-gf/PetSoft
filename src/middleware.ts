@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
     req,
     // couvre v5 (AUTH_SECRET) et v4 (NEXTAUTH_SECRET)
     secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production",
   });
 
   const { pathname } = req.nextUrl;
