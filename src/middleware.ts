@@ -7,8 +7,8 @@ export async function middleware(req: NextRequest) {
   // Lit le token NextAuth sans charger tes providers (Edge-safe)
   const userIsConnected = await getToken({
     req,
-    // couvre v5 (AUTH_SECRET) et v4 (NEXTAUTH_SECRET)
-    secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+    // couvre v5 (AUTH_SECRET)
+    secret: process.env.AUTH_SECRET,
     secureCookie: process.env.NODE_ENV === "production",
   });
 
